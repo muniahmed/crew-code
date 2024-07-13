@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import MonacoEditor from "@monaco-editor/react";
+import Chat from "../components/Chat";
 
 const EditorPage = () => {
   const { id } = useParams();
@@ -28,12 +29,15 @@ const EditorPage = () => {
   };
 
   return (
-    <MonacoEditor
-      height="90vh"
-      defaultLanguage="javascript"
-      onChange={handleEditorChange}
-      editorDidMount={(editor) => (editorRef.current = editor)}
-    />
+    <div>
+      <MonacoEditor
+        height="90vh"
+        defaultLanguage="javascript"
+        onChange={handleEditorChange}
+        editorDidMount={(editor) => (editorRef.current = editor)}
+      />
+      <Chat socket={socket} />
+    </div>
   );
 };
 

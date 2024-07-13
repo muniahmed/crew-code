@@ -17,6 +17,7 @@ io.on("connection", (socket) => {
 
   socket.on("code-change", (data) => {
     socket.broadcast.emit("code-update", data);
+    console.log(data);
   });
 
   socket.on("disconnect", () => {
