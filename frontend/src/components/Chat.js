@@ -15,6 +15,7 @@ const Chat = ({ socket }) => {
   const sendMessage = () => {
     if (socket && input) {
       socket.emit("message", input);
+      console.log(input);
       setInput("");
     }
   };
