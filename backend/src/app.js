@@ -4,6 +4,7 @@ const { Server } = require("socket.io");
 const cors = require("cors");
 const { exec } = require("child_process");
 const { stderr } = require("process");
+const vm = require("vm");
 
 const app = express();
 const server = http.createServer(app);
@@ -24,17 +25,29 @@ app.use("/api", require("./routes"));
 // code compilation endpoint
 app.post("/compile", (req, res) => {
   const { code } = req.body;
+  console.log("Received code:", code);
 
-  exec(
-    'node -e "' + code.replace(/"/g, '\\"') + '"',
-    (error, stdout, stderr) => {
-      if (error) {
-        res.status(400).json({ error: stderr });
-      } else {
-        res.json({ output: stdout });
-      }
-    }
-  );
+  try {
+    let output = "";
+    const script = new vm.Script(`
+      (function() {
+        const console = {
+          log: (...args) => {
+            output += args.join(' ') + '\\n';
+          }
+        };
+        ${code}
+      })()
+    `);
+    const context = { output: "" };
+    vm.createContext(context);
+    script.runInContext(context);
+    console.log("Execution result:", context.output);
+    res.json({ output: context.output });
+  } catch (error) {
+    console.error("Execution error:", error);
+    res.status(400).json({ error: error.message });
+  }
 });
 
 io.on("connection", (socket) => {
