@@ -1,19 +1,65 @@
-import { Box, HStack } from "@chakra-ui/react";
+import { Box, HStack, Text } from "@chakra-ui/react";
 import { Editor } from "@monaco-editor/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LanguageSelector from "./LanguageSelector";
 import { CODE_SNIPPETS } from "../constants";
 import Output from "./Output";
+import * as Y from "yjs";
+import { WebrtcProvider } from "y-webrtc";
+import { MonacoBinding } from "y-monaco";
 
 const CodeEditor = () => {
   const editorRef = useRef();
   const [value, setValue] = useState("");
   const [language, setLanguage] = useState("javascript");
+  const [sharedLanguage, setSharedLanguage] = useState(null);
+  const [users, setUsers] = useState(0);
 
   const onMount = (editor) => {
+    const doc = new Y.Doc();
+
+    const provider = new WebrtcProvider("test-room", doc);
+    const codeEditorType = doc.getText("monaco");
+    const languageType = doc.getText("programming-language");
+    const usersType = doc.getText("num-users");
+
     editorRef.current = editor;
+
+    // eslint-disable-next-line no-unused-vars
+    const binding = new MonacoBinding(
+      codeEditorType,
+      editorRef.current.getModel(),
+      new Set([editorRef.current]),
+      provider.awareness
+    );
+
+    const awareness = provider.awareness;
+
+    awareness.on("change", (changes, origin) => {
+      const userCount = awareness.getStates().size;
+      setUsers(userCount);
+    });
+
+    setLanguage(languageType.toString());
+
+    languageType.observe(() => {
+      setLanguage(languageType.toString());
+    });
+
+    setSharedLanguage(languageType);
+
     editor.focus();
   };
+
+  useEffect(() => {
+    if (sharedLanguage) {
+      const currentLanguage = sharedLanguage.toString();
+      if (currentLanguage !== language) {
+        sharedLanguage.delete(0, sharedLanguage.length);
+        sharedLanguage.insert(0, language);
+      }
+    }
+  }, [language, sharedLanguage]);
 
   const onSelect = (language) => {
     setLanguage(language);
@@ -24,6 +70,7 @@ const CodeEditor = () => {
     <Box>
       <HStack spacing={4}>
         <Box w="50%">
+          <Text>{`Current user count: ${users}`}</Text>
           <LanguageSelector language={language} onSelect={onSelect} />
           <Editor
             height="75vh"
