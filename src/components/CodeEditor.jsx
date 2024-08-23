@@ -7,6 +7,7 @@ import Output from "./Output";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { MonacoBinding } from "y-monaco";
+import { useLocation } from "react-router-dom";
 
 const CodeEditor = () => {
   const editorRef = useRef();
@@ -14,6 +15,8 @@ const CodeEditor = () => {
   const [language, setLanguage] = useState("javascript");
   const [sharedLanguage, setSharedLanguage] = useState(null);
   const [users, setUsers] = useState(0);
+  const location = useLocation();
+  const { roomName } = location.state || {};
 
   const onMount = (editor) => {
     const doc = new Y.Doc();
@@ -21,7 +24,6 @@ const CodeEditor = () => {
     const provider = new WebrtcProvider("test-room", doc);
     const codeEditorType = doc.getText("monaco");
     const languageType = doc.getText("programming-language");
-    const usersType = doc.getText("num-users");
 
     editorRef.current = editor;
 
@@ -35,6 +37,7 @@ const CodeEditor = () => {
 
     const awareness = provider.awareness;
 
+    // eslint-disable-next-line no-unused-vars
     awareness.on("change", (changes, origin) => {
       const userCount = awareness.getStates().size;
       setUsers(userCount);
@@ -70,6 +73,7 @@ const CodeEditor = () => {
     <Box>
       <HStack spacing={4}>
         <Box w="50%">
+          <Text>{roomName}</Text>
           <Text>{`Current user count: ${users}`}</Text>
           <LanguageSelector language={language} onSelect={onSelect} />
           <Editor

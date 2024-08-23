@@ -1,11 +1,19 @@
-import { Box } from "@chakra-ui/react";
-import CodeEditor from "./components/CodeEditor";
+import { Box, Center } from "@chakra-ui/react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import CreateRoomScreen from "./screens/CreateRoomScreen";
+import EditorScreen from "./screens/EditorScreen";
 
 function App() {
   return (
-    <Box minH="100vh" bg="#110e1b" px={6} py={8}>
-      <CodeEditor />
-    </Box>
+    <BrowserRouter>
+      <Box minH="100vh" bg="#110e1b">
+        <Routes>
+          <Route exact path="/" element={<CreateRoomScreen />} />
+          <Route path="editor" element={<EditorScreen />} />
+          <Route path="*" element={<Center>Page not found</Center>} />
+        </Routes>
+      </Box>
+    </BrowserRouter>
   );
 }
 
