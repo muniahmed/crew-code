@@ -34,6 +34,12 @@ const CreateRoomScreen = () => {
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      enterRoom();
+    }
+  };
+
   return (
     <Center h="100vh" w="100vw">
       <VStack spacing={5}>
@@ -43,6 +49,7 @@ const CreateRoomScreen = () => {
           onChange={(e) => {
             setRoomName(e.target.value);
           }}
+          onKeyDown={handleKeyDown}
           placeholder="Please enter the room name:"
         />
         <Button colorScheme="green" onClick={enterRoom} isLoading={isLoading}>

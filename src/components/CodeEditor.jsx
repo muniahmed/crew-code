@@ -21,7 +21,7 @@ const CodeEditor = () => {
   const onMount = (editor) => {
     const doc = new Y.Doc();
 
-    const provider = new WebrtcProvider("test-room", doc);
+    const provider = new WebrtcProvider(roomName, doc);
     const codeEditorType = doc.getText("monaco");
     const languageType = doc.getText("programming-language");
 
@@ -73,8 +73,8 @@ const CodeEditor = () => {
     <Box>
       <HStack spacing={4}>
         <Box w="50%">
-          <Text>{roomName}</Text>
-          <Text>{`Current user count: ${users}`}</Text>
+          <Text>Room Name: {roomName}</Text>
+          <Text>{`Users in Room: ${users}`}</Text>
           <LanguageSelector language={language} onSelect={onSelect} />
           <Editor
             height="75vh"
