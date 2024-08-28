@@ -1,4 +1,4 @@
-import { Box, HStack, Text } from "@chakra-ui/react";
+import { Box, Button, HStack, Text } from "@chakra-ui/react";
 import { Editor } from "@monaco-editor/react";
 import { useEffect, useRef, useState } from "react";
 import LanguageSelector from "./LanguageSelector";
@@ -7,7 +7,7 @@ import Output from "./Output";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { MonacoBinding } from "y-monaco";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const CodeEditor = () => {
   const editorRef = useRef();
@@ -17,6 +17,7 @@ const CodeEditor = () => {
   const [users, setUsers] = useState(0);
   const location = useLocation();
   const { roomName } = location.state || {};
+  const navigate = useNavigate();
 
   const onMount = (editor) => {
     const doc = new Y.Doc();
@@ -37,8 +38,7 @@ const CodeEditor = () => {
 
     const awareness = provider.awareness;
 
-    // eslint-disable-next-line no-unused-vars
-    awareness.on("change", (changes, origin) => {
+    awareness.on("change", () => {
       const userCount = awareness.getStates().size;
       setUsers(userCount);
     });
@@ -69,12 +69,16 @@ const CodeEditor = () => {
     setValue(CODE_SNIPPETS[language]);
   };
 
+  const handleBackClick = () => {
+    navigate("/");
+  };
+
   return (
     <Box>
       <HStack spacing={4}>
         <Box w="50%">
-          <Text>Room Name: {roomName}</Text>
-          <Text>{`Users in Room: ${users}`}</Text>
+          <Text ml={2}>Room Name: {roomName}</Text>
+          <Text ml={2}>{`Users in Room: ${users}`}</Text>
           <LanguageSelector language={language} onSelect={onSelect} />
           <Editor
             height="75vh"
@@ -88,6 +92,9 @@ const CodeEditor = () => {
         </Box>
         <Output editorRef={editorRef} language={language} />
       </HStack>
+      <Button colorScheme="blue" mt={4} onClick={handleBackClick}>
+        Back
+      </Button>
     </Box>
   );
 };
