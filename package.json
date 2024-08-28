@@ -14,6 +14,7 @@
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@monaco-editor/react": "^4.6.0",
+    "aws-amplify": "^6.5.3",
     "axios": "^1.7.3",
     "frame": "^1.0.0-alpha.2",
     "prop-types": "^15.8.1",
@@ -25,11 +26,19 @@
     "yjs": "^13.6.18"
   },
   "devDependencies": {
+    "@aws-amplify/backend": "^1.2.0",
+    "@aws-amplify/backend-cli": "^1.2.5",
     "@vitejs/plugin-react": "^4.3.1",
+    "aws-cdk": "^2.154.1",
+    "aws-cdk-lib": "^2.154.1",
+    "constructs": "^10.3.0",
+    "esbuild": "^0.23.1",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.3",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4",
     "vite": "^5.3.4"
   }
 }
