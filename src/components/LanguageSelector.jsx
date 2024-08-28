@@ -9,11 +9,12 @@ import {
 } from "@chakra-ui/react";
 import { LANGUAGE_VERSIONS } from "../constants";
 
-const languages = Object.entries(LANGUAGE_VERSIONS);
 const ACTIVE_COLOR = "blue.400";
 
 // eslint-disable-next-line react/prop-types
 const LanguageSelector = ({ language, onSelect }) => {
+  const languages = Object.entries(LANGUAGE_VERSIONS);
+
   return (
     <Box ml={2} mb={4}>
       <Text mb={2} fontSize="lg">
@@ -21,7 +22,7 @@ const LanguageSelector = ({ language, onSelect }) => {
       </Text>
       <Menu isLazy>
         <MenuButton as={Button}>{language}</MenuButton>
-        <MenuList bg="#110c1b">
+        <MenuList bg="#110c1b" maxH="200px" overflowY="auto">
           {languages.map(([lang, version]) => (
             <MenuItem
               key={lang}

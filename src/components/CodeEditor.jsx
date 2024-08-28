@@ -2,12 +2,13 @@ import { Box, Button, HStack, Text } from "@chakra-ui/react";
 import { Editor } from "@monaco-editor/react";
 import { useEffect, useRef, useState } from "react";
 import LanguageSelector from "./LanguageSelector";
-import { CODE_SNIPPETS } from "../constants";
+import { CODE_SNIPPETS, LANGUAGE_VERSIONS } from "../constants";
 import Output from "./Output";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { MonacoBinding } from "y-monaco";
 import { useLocation, useNavigate } from "react-router-dom";
+import { fetchLanguageVersions } from "../api";
 
 const CodeEditor = () => {
   const editorRef = useRef();
@@ -54,6 +55,16 @@ const CodeEditor = () => {
     editor.focus();
   };
 
+  useEffect(() => {
+    const updateLanguageVersions = async () => {
+      const fetchedVersions = await fetchLanguageVersions();
+      if (fetchedVersions) {
+        Object.assign(LANGUAGE_VERSIONS, fetchedVersions);
+      }
+    };
+
+    updateLanguageVersions();
+  }, []);
   useEffect(() => {
     if (sharedLanguage) {
       const currentLanguage = sharedLanguage.toString();

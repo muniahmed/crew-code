@@ -1,6 +1,4 @@
-//TODO Fetch language versions from Piston API
-
-export const LANGUAGE_VERSIONS = {
+let LANGUAGE_VERSIONS = {
   javascript: "18.15.0",
   typescript: "5.0.3",
   python: "3.10.0",
@@ -18,3 +16,5 @@ export const CODE_SNIPPETS = {
     'using System;\n\nnamespace HelloWorld\n{\n\tclass Hello { \n\t\tstatic void Main(string[] args) {\n\t\t\tConsole.WriteLine("Hello World in C#");\n\t\t}\n\t}\n}\n',
   php: "<?php\n\n$name = 'User';\necho $name;\n",
 };
+
+export { LANGUAGE_VERSIONS };
