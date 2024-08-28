@@ -4,8 +4,10 @@ import CreateRoomScreen from "./screens/CreateRoomScreen";
 import EditorScreen from "./screens/EditorScreen";
 
 function App() {
+  const basename = "/crew-code";
+
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <Box minH="100vh" bg="#110e1b">
         <Routes>
           <Route exact path="/" element={<CreateRoomScreen />} />

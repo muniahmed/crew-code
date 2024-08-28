@@ -23,7 +23,9 @@ const CodeEditor = () => {
   const onMount = (editor) => {
     const doc = new Y.Doc();
 
-    const provider = new WebrtcProvider(roomName, doc);
+    const provider = new WebrtcProvider(roomName, doc, {
+      signaling: ["wss://signaling.yjs.dev"],
+    });
     const codeEditorType = doc.getText("monaco");
     const languageType = doc.getText("programming-language");
 
