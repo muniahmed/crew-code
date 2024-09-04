@@ -24,7 +24,7 @@ const CodeEditor = () => {
     const doc = new Y.Doc();
 
     const provider = new WebrtcProvider(roomName, doc, {
-      signaling: ["http://crew-code-signaling-server.vercel.app/"],
+      signaling: ["wss://crew-code-signaling-server.onrender.com"],
     });
     const codeEditorType = doc.getText("monaco");
     const languageType = doc.getText("programming-language");
