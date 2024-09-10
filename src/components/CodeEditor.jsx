@@ -1,4 +1,4 @@
-import { Box, Button, HStack, Text } from "@chakra-ui/react";
+import { Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
 import { Editor } from "@monaco-editor/react";
 import { useEffect, useRef, useState } from "react";
 import LanguageSelector from "./LanguageSelector";
@@ -9,16 +9,20 @@ import { WebrtcProvider } from "y-webrtc";
 import { MonacoBinding } from "y-monaco";
 import { useLocation, useNavigate } from "react-router-dom";
 import { fetchLanguageVersions } from "../api";
+import InactiveTooltip from "./InactiveTooltip";
 
 const CodeEditor = () => {
   const editorRef = useRef();
   const [value, setValue] = useState("");
   const [language, setLanguage] = useState("javascript");
   const [sharedLanguage, setSharedLanguage] = useState(null);
+  const [isServerActive, setIsServerActive] = useState(false);
   const [users, setUsers] = useState(0);
   const location = useLocation();
   const { roomName } = location.state || {};
   const navigate = useNavigate();
+  const docRef = useRef(null);
+  const providerRef = useRef(null);
 
   const onMount = (editor) => {
     const doc = new Y.Doc();
@@ -26,6 +30,10 @@ const CodeEditor = () => {
     const provider = new WebrtcProvider(roomName, doc, {
       signaling: ["wss://crew-code-signaling-server.onrender.com"],
     });
+
+    docRef.current = doc;
+    providerRef.current = provider;
+
     const codeEditorType = doc.getText("monaco");
     const languageType = doc.getText("programming-language");
 
@@ -86,12 +94,44 @@ const CodeEditor = () => {
     navigate("/");
   };
 
+  useEffect(() => {
+    const checkServerStatus = async () => {
+      try {
+        const response = await fetch(
+          "https://crew-code-signaling-server.onrender.com/health"
+        );
+        if (response.ok) {
+          setIsServerActive(true);
+        } else {
+          setIsServerActive(false);
+        }
+      } catch (error) {
+        setIsServerActive(false);
+      }
+    };
+
+    checkServerStatus();
+
+    const interval = setInterval(checkServerStatus, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (docRef.current) {
+        docRef.current.destroy();
+      }
+      if (providerRef.current) {
+        providerRef.current.destroy();
+      }
+    };
+  }, []);
+
   return (
     <Box>
       <HStack spacing={4}>
         <Box w="50%">
-          <Text ml={2}>Room Name: {roomName}</Text>
-          <Text ml={2}>{`Users in Room: ${users}`}</Text>
           <LanguageSelector language={language} onSelect={onSelect} />
           <Editor
             height="75vh"
@@ -105,9 +145,26 @@ const CodeEditor = () => {
         </Box>
         <Output editorRef={editorRef} language={language} />
       </HStack>
-      <Button colorScheme="blue" mt={4} onClick={handleBackClick}>
-        Back
-      </Button>
+
+      <HStack justify="space-between" w="100%" mt={4}>
+        <HStack align="center">
+          <InactiveTooltip />
+          <Text>Server Status: </Text>
+          <Box
+            w="12px"
+            h="12px"
+            bg={isServerActive ? "green.500" : "red.500"}
+            borderRadius="50%"
+          />
+        </HStack>
+        <VStack>
+          <Text>Room: {roomName}</Text>
+          <Text>{`Contributors: ${users}`}</Text>
+        </VStack>
+        <Button colorScheme="blue" onClick={handleBackClick}>
+          Back
+        </Button>
+      </HStack>
     </Box>
   );
 };

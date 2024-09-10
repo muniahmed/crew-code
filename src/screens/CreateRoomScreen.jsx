@@ -1,4 +1,11 @@
-import { Button, Center, Input, useToast, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  Input,
+  Text,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -43,18 +50,28 @@ const CreateRoomScreen = () => {
   return (
     <Center h="100vh" w="100vw">
       <VStack spacing={5}>
-        <Input
-          w={250}
-          value={roomName}
-          onChange={(e) => {
-            setRoomName(e.target.value);
-          }}
-          onKeyDown={handleKeyDown}
-          placeholder="Please enter the room name:"
-        />
-        <Button colorScheme="green" onClick={enterRoom} isLoading={isLoading}>
-          Enter
-        </Button>
+        <VStack spacing={0}>
+          <Text fontSize="5xl" fontWeight="600">
+            CrewCode
+          </Text>
+          <Text fontSize="2xl" fontWeight="100">
+            Connect. Collaborate. Code.
+          </Text>
+        </VStack>
+        <VStack spacing={5}>
+          <Input
+            w={250}
+            value={roomName}
+            onChange={(e) => {
+              setRoomName(e.target.value);
+            }}
+            onKeyDown={handleKeyDown}
+            placeholder="Please enter the room name:"
+          />
+          <Button colorScheme="green" onClick={enterRoom} isLoading={isLoading}>
+            Enter
+          </Button>
+        </VStack>
       </VStack>
     </Center>
   );
