@@ -1,4 +1,4 @@
-import { Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, HStack, Stack, Text, VStack } from "@chakra-ui/react";
 import { Editor } from "@monaco-editor/react";
 import { useEffect, useRef, useState } from "react";
 import LanguageSelector from "./LanguageSelector";
@@ -14,7 +14,7 @@ import InactiveTooltip from "./InactiveTooltip";
 const CodeEditor = () => {
   const editorRef = useRef();
   const [value, setValue] = useState("");
-  const [language, setLanguage] = useState("javascript");
+  const [language, setLanguage] = useState();
   const [sharedLanguage, setSharedLanguage] = useState(null);
   const [isServerActive, setIsServerActive] = useState(false);
   const [users, setUsers] = useState(0);
@@ -130,23 +130,29 @@ const CodeEditor = () => {
 
   return (
     <Box>
-      <HStack spacing={4}>
-        <Box w="50%">
+      <Stack
+        spacing={4}
+        direction={{ base: "column", md: "row" }}
+        display={{ base: "inline", md: "flex" }}
+      >
+        <Box w={{ base: "100%", md: "50%" }}>
           <LanguageSelector language={language} onSelect={onSelect} />
-          <Editor
-            height="75vh"
-            theme="vs-dark"
-            language={language}
-            defaultValue={CODE_SNIPPETS[language]}
-            onMount={onMount}
-            value={value}
-            onChange={(value) => setValue(value)}
-          />
+          <Box h={{ base: "35vh", md: "75vh" }}>
+            <Editor
+              height="100%"
+              theme="vs-dark"
+              language={language}
+              defaultValue={CODE_SNIPPETS[language]}
+              onMount={onMount}
+              value={value}
+              onChange={(value) => setValue(value)}
+            />
+          </Box>
         </Box>
         <Output editorRef={editorRef} language={language} />
-      </HStack>
+      </Stack>
 
-      <HStack justify="space-between" w="100%" mt={4}>
+      <HStack justify="space-between" mt={4} p={4}>
         <HStack align="center">
           <InactiveTooltip />
           <Text>Server Status: </Text>

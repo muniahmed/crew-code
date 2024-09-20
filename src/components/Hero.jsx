@@ -55,14 +55,16 @@ const Hero = () => {
     <Container
       maxW={"7xl"}
       display="flex"
-      height="90vh"
+      height="100vh"
       justifyContent="center"
       alignItems="center"
     >
       <HStack spacing="200px">
         <VStack align={"start"} spacing="10px">
-          <Heading as="h1" size="4xl" fontWeight="900">
-            Connect. Collaborate.{" "}
+          <Heading as="h1" size="4xl" fontWeight="900" noOfLines="3">
+            Connect.
+            <br />
+            Collaborate.{" "}
             <Text bgGradient="linear(to-r, #1AC2B1, #B2D765)" bgClip="text">
               Code.
             </Text>
@@ -72,7 +74,7 @@ const Hero = () => {
           </Text>
           <HStack spacing={0}>
             <Input
-              w={250}
+              // w={250}
               value={roomName}
               onChange={(e) => {
                 setRoomName(e.target.value);
@@ -87,6 +89,7 @@ const Hero = () => {
             />
             <Button
               color="#000"
+              w={200}
               colorScheme="green"
               bgGradient="linear(to-r, #1AC2B1, #B2D765)"
               onClick={enterRoom}
@@ -101,7 +104,7 @@ const Hero = () => {
           position="relative"
           h="300px"
           w="full"
-          display="flex"
+          display={{ base: "none", xl: "flex" }}
           alignItems="center"
           justifyContent="center"
         >
